@@ -7,5 +7,6 @@ require (
 	github.com/gin-gonic/gin v1.6.3
 	github.com/joho/godotenv v1.3.0
 	github.com/qiniu/api.v7/v7 v7.5.0
+	github.com/jinzhu/gorm v1.9.15
 	golang.org/x/sys v0.0.0-20200806060901-a37d78b92225 // indirect
 )
