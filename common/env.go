@@ -8,9 +8,11 @@ import (
 )
 
 var (
-	ds string
-	ak string
-	sk string
+	ds        string
+	ak        string
+	sk        string
+	appid     string
+	appsecret string
 )
 
 // GetEnv 获取env
@@ -26,11 +28,26 @@ func GetEnv() {
 	usrname := os.Getenv("USRNAME")
 	password := os.Getenv("PASSWORD")
 	host := os.Getenv("HOST")
-	port := os.Getenv("PORT")
 	database := os.Getenv("DATABASE")
 
-	ds = usrname + ":" + password + "@tcp(" + host + ":" + port + ")/" + database
+	appid = os.Getenv("APPID")
+	appsecret = os.Getenv("APPSECRET")
+	ds = usrname + ":" + password + "@(" + host + ")/" + database + "?charset=utf8mb4&parseTime=True&loc=Local"
+	Log("ds", ds)
+	return
+}
 
+// GetDbSource 获取数据库源
+func GetDbSource() (dbsource string) {
+	dbsource = ds
+	return
+}
+
+// GetWeappKey 获取七牛key
+func GetWeappKey() (key map[string]string) {
+	key = make(map[string]string)
+	key["appid"] = appid
+	key["appsecret"] = appsecret
 	return
 }
 

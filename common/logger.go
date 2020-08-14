@@ -1,23 +1,22 @@
 package common
 
 import (
-	"log"
+	"fmt"
 	"os"
+
+	"github.com/sirupsen/logrus"
 )
 
-var logger *log.Logger
-
+// Loginit 初始化日志
 func Loginit() {
-	f, err := os.OpenFile("diancan.log",
-		os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
-	if err != nil {
-		log.Println(err)
+	if file, err := os.OpenFile("diancan.log", os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0666); err == nil {
+		logrus.SetOutput(file)
+	} else {
+		logrus.Error(err)
 	}
-	// defer f.Close()
-	logger = log.New(f, "", log.LstdFlags)
-	logger.Println("Log init")
 }
 
+// Log 记录日志
 func Log(ns string, log interface{}) {
-	logger.Println(ns, log)
+	logrus.Error(fmt.Sprintf("[%s],%s", ns, log))
 }
