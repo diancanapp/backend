@@ -15,6 +15,13 @@ type OrderGoods struct {
 
 // -------------------------------新建-------------------------------
 
+// CreateOrderGoods 创建订单商品
+func CreateOrderGoods(orderID uint, goodsID uint, goodsName string, goodsNumber uint, marketPrice uint, goodsPrice uint) error {
+	var orderGoods = OrderGoods{OrderID: orderID, GoodsID: goodsID, GoodsName: goodsName, GoodsNumber: goodsNumber, MarketPrice: marketPrice, GoodsPrice: goodsPrice}
+	err := DB.Create(&orderGoods).Error
+	return err
+}
+
 // -------------------------------删除-------------------------------
 
 // -------------------------------更改-------------------------------

@@ -3,7 +3,7 @@ package server
 import (
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
-	"wozaizhao.com/diancan/controllers/qiniu"
+	"wozaizhao.com/diancan/controllers/auxiliary"
 	"wozaizhao.com/diancan/controllers/user"
 )
 
@@ -40,11 +40,17 @@ func SetupRouter() *gin.Engine {
 
 	}
 
-	//管理后台接口
-	admin := r.Group("/admin")
+	// 一般接口
+	api := r.Group("api")
 	{
-		admin.POST("upload", qiniu.Upload)
+		api.POST("upload", auxiliary.Upload)
 	}
+
+	//管理后台接口
+	// admin := r.Group("/admin")
+	// {
+	// 	admin
+	// }
 
 	return r
 }

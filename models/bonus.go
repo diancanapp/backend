@@ -23,6 +23,13 @@ type Bonus struct {
 
 // -------------------------------新建-------------------------------
 
+// CreateBonus 创建红包
+func CreateBonus(name string, money uint, sendType uint, minAmount uint, maxAmount uint, sendStartDate *time.Time, sendEndDate *time.Time, useStartDate *time.Time, useEndDate *time.Time, minOrderAmount uint) error {
+	var bonus = Bonus{Name: name, Money: money, SendType: sendType, MinAmount: minAmount, MaxAmount: maxAmount, SendStartDate: sendStartDate, SendEndDate: sendEndDate, UseStartDate: useStartDate, UseEndDate: useEndDate, MinOrderAmount: minOrderAmount}
+	err := DB.Create(&bonus).Error
+	return err
+}
+
 // -------------------------------删除-------------------------------
 
 // -------------------------------更改-------------------------------

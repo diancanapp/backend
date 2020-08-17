@@ -11,6 +11,13 @@ type Config struct {
 
 // -------------------------------新建-------------------------------
 
+// CreateConfig 创建配置
+func CreateConfig(key string, value string) error {
+	var config = Config{Key: key, Value: value}
+	err := DB.Create(&config).Error
+	return err
+}
+
 // -------------------------------删除-------------------------------
 
 // -------------------------------更改-------------------------------
