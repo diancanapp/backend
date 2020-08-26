@@ -19,18 +19,22 @@ type User struct {
 	Language        string `json:"language" gorm:"type:varchar(20);DEFAULT ''"`
 	PhoneNumber     string `json:"phoneNumber" gorm:"type:varchar(11);DEFAULT ''"`
 	PurePhoneNumber string `json:"purePhoneNumber" gorm:"type:varchar(11);DEFAULT ''"`
-	CountryCode     string `json:"countryCode"  gorm:"type:varchar(20);DEFAULT ''"`
-	SessionKey      string `json:"session_key"`
-	Token           string `json:"token"`
+	CountryCode     string `json:"countryCode" gorm:"type:varchar(20);DEFAULT ''"`
+	SessionKey      string `json:"sessionKey" gorm:"type:varchar(40);DEFAULT ''"`
+	Token           string `json:"token" gorm:"type:varchar(40);DEFAULT ''"`
+	Role            int    `json:"role" gorm:"type:tinyint(1);DEFAULT '0'"`
 }
 
 // -------------------------------新建-------------------------------
 
 // CreateUser 创建用户
-func CreateUser(openID string, sessionKey string, token string) error {
+func CreateUser(openID, sessionKey, token string) error {
 	var user = User{OpenID: openID, SessionKey: sessionKey, Token: token}
-	err := DB.Create(&user).Error
-	return err
+	if err := DB.Create(&user).Error; err != nil {
+		common.Log("CreateUser", err)
+		return err
+	}
+	return nil
 }
 
 // -------------------------------删除-------------------------------
@@ -38,10 +42,23 @@ func CreateUser(openID string, sessionKey string, token string) error {
 // -------------------------------更改-------------------------------
 
 // UpdateSessionKey 更新用户sessionKey
-func UpdateSessionKey(openID string, sessionKey string, token string) error {
+func UpdateSessionKey(openID, sessionKey, token string) error {
 	var user User
-	err := DB.Model(&user).Where("open_id = ?", openID).Updates(User{SessionKey: sessionKey, Token: token}).Error
-	return err
+	if err := DB.Model(&user).Where("open_id = ?", openID).Updates(User{SessionKey: sessionKey, Token: token}).Error; err != nil {
+		common.Log("UpdateSessionKey", err)
+		return err
+	}
+	return nil
+}
+
+// UpdateUserInfo 更新用户信息
+func UpdateUserInfo(openID, unionID, nickName string, gender int, city, province, country, avatarURL, language, phoneNumber, purePhoneNumber, countryCode string) error {
+	var user User
+	if err := DB.Model(&user).Where("open_id = ?", openID).Updates(User{UnionID: unionID, NickName: nickName, Gender: gender, City: city, Province: province, Country: country, AvatarURL: avatarURL, Language: language, PhoneNumber: phoneNumber, PurePhoneNumber: purePhoneNumber, CountryCode: countryCode}).Error; err != nil {
+		common.Log("UpdateUserInfo", err)
+		return err
+	}
+	return nil
 }
 
 // -------------------------------查询单个-------------------------------
@@ -68,9 +85,19 @@ func GetSessionKeyByToken(token string) (string, error) {
 	var user User
 	if err := DB.Where("token = ?", token).First(&user).Error; err != nil {
 		common.Log("GetSessionKeyByToken", err)
-		return user.Token, err
+		return user.SessionKey, err
 	}
-	return user.Token, nil
+	return user.SessionKey, nil
+}
+
+// GetUserIDByToken 根据token获取userID
+func GetUserIDByToken(token string) (uint, error) {
+	var user User
+	if err := DB.Where("token = ?", token).First(&user).Error; err != nil {
+		common.Log("GetUserIDByToken", err)
+		return user.ID, err
+	}
+	return user.ID, nil
 }
 
 // -------------------------------查询所有-------------------------------

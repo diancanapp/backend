@@ -13,6 +13,7 @@ var (
 	sk        string
 	appid     string
 	appsecret string
+	jwtSecret string
 )
 
 // GetEnv 获取env
@@ -30,10 +31,11 @@ func GetEnv() {
 	host := os.Getenv("HOST")
 	database := os.Getenv("DATABASE")
 
+	jwtSecret = os.Getenv("JWTSECRET")
+
 	appid = os.Getenv("APPID")
 	appsecret = os.Getenv("APPSECRET")
 	ds = usrname + ":" + password + "@(" + host + ")/" + database + "?charset=utf8mb4&parseTime=True&loc=Local"
-	Log("ds", ds)
 	return
 }
 
@@ -57,4 +59,9 @@ func GetQiniuKey() (key map[string]string) {
 	key["ak"] = ak
 	key["sk"] = sk
 	return
+}
+
+// getJwtSecret 获取jwtSecret
+func GetJwtSecret() string {
+	return jwtSecret
 }

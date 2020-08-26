@@ -24,4 +24,16 @@ func CreateQiniu(key string, imgType uint) error {
 
 // -------------------------------查询单个-------------------------------
 
+// QueryQiniuByID 根据id查qiniu
+func QueryQiniuByID(id uint) (qiniu Qiniu, err error) {
+	err = DB.Where("id = ?", id).Find(&qiniu).Error
+	return qiniu, err
+}
+
 // -------------------------------查询所有-------------------------------
+
+// QueryQinius 所有Qiniu
+func QueryQinius(size, offset uint) (qinius []Qiniu, err error) {
+	err = DB.Limit(size).Offset(offset).Find(&qinius).Error
+	return qinius, err
+}
