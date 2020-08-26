@@ -10,6 +10,7 @@ func main() {
 	common.Loginit()
 	common.GetEnv()
 	models.DBinit()
+	// models.CreateAdmin("xchao", "alpha", 99)
 	common.Log("main", "Server Start")
 	// token, err := middleware.GenerateToken("beetle")
 	// const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyTmFtZSI6ImJlZXRsZSIsImV4cCI6MTU5NzgyMDI2OCwiaXNzIjoid296YWl6aGFvIn0.X3rIns68va7dQpnxWIG7p6Oog08B-K9RcVqKV44b6iQ"
@@ -17,5 +18,5 @@ func main() {
 	// fmt.Println(err)
 	// fmt.Println(data)
 	r := server.SetupRouter()
-	r.Run(":8089")
+	r.Run(":8087")
 }

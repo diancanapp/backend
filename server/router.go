@@ -68,6 +68,8 @@ func SetupRouter() *gin.Engine {
 	// 管理后台接口, 需要jwtToken
 	admin := r.Group("/admin")
 	{
+		// 获取当前用户
+		admin.GET("currentUser", user.GetCurrentAdmin)
 		// 新增Banner
 		admin.POST("banner", business.PostBanner)
 		// 删除Banner

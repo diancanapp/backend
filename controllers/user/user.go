@@ -6,6 +6,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"wozaizhao.com/diancan/common"
 	"wozaizhao.com/diancan/controllers/base"
+	"wozaizhao.com/diancan/middleware"
 	"wozaizhao.com/diancan/models"
 	"wozaizhao.com/diancan/util"
 	"wozaizhao.com/diancan/wechat"
@@ -18,6 +19,11 @@ type wxLoginRequest struct {
 type wxUserInfo struct {
 	EncryptedData string `json:"encryptedData"  binding:"required"`
 	Iv            string `json:"iv" binding:"required"`
+}
+
+type loginRequest struct {
+	UserName string `json:"userName"  binding:"required"`
+	Password string `json:"password" binding:"required"`
 }
 
 // WxLogin 微信登录
@@ -83,10 +89,61 @@ func SaveUserInfo(c *gin.Context) {
 	base.Ok(c, "Save userinfo successfully")
 }
 
-// GetCurrentUser
+// GetCurrentUser 获取当前小程序用户
 func GetCurrentUser(c *gin.Context) {
 }
 
-// Login
+// Login 登录管理后台
 func Login(c *gin.Context) {
+	var loginReq loginRequest
+	if err := c.Bind(&loginReq); err != nil {
+		base.FailUnprocessableEntity(c, err)
+		return
+	}
+	admin, errGetAdmin := models.GetAdminByUserName(loginReq.UserName)
+	if errGetAdmin != nil {
+		base.Fail(c, "Admin not found")
+		return
+	}
+
+	passwordMd5 := util.Md5(loginReq.Password)
+
+	if passwordMd5 != admin.Password {
+		base.FailUnauthorized(c, "Username or password not match!")
+		return
+	}
+
+	token, errGenerateToken := middleware.GenerateToken(admin.UserName)
+	if errGenerateToken != nil {
+		base.Fail(c, "Login fail")
+		return
+	}
+
+	base.Ok(c, token)
+
+}
+
+// getCurrentAdmin 获取当前后台用户
+func GetCurrentAdmin(c *gin.Context) {
+	token := c.Request.Header.Get("token")
+
+	if token == "" {
+		base.FailUnauthorized(c, "Token is missing!")
+	}
+	data, err := middleware.ParseToken(token)
+
+	if err != nil {
+		base.FailUnauthorized(c, "Token is invalid!")
+		return
+	}
+
+	admin, errGetAdmin := models.GetAdminByUserName(data.Username)
+
+	if errGetAdmin != nil {
+		base.FailUnauthorized(c, "get admin error")
+		return
+	}
+
+	base.Ok(c, admin)
+
 }

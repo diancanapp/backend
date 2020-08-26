@@ -13,7 +13,7 @@ var DB *gorm.DB
 
 // Models 数据库实体
 var models = []interface{}{
-	&Banner{}, &Bonus{}, &Category{}, &Config{}, &Feedback{}, &Goods{}, &OrderGoods{}, &Order{}, &Qiniu{}, &UserBonus{}, &User{},
+	&Banner{}, &Bonus{}, &Category{}, &Config{}, &Feedback{}, &Goods{}, &OrderGoods{}, &Order{}, &Qiniu{}, &UserBonus{}, &User{}, &Admin{},
 }
 
 // DBinit 数据库初始化
