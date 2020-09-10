@@ -1,6 +1,9 @@
 package models
 
-import "github.com/jinzhu/gorm"
+import (
+	"github.com/jinzhu/gorm"
+	"wozaizhao.com/diancan/common"
+)
 
 // Banner banner
 type Banner struct {
@@ -13,8 +16,8 @@ type Banner struct {
 // -------------------------------新建-------------------------------
 
 // CreateBanner 创建Banner
-func CreateBanner(imgSrc, link string, sortOrder int) error {
-	var banner = Banner{ImgSrc: imgSrc, Link: link, SortOrder: sortOrder}
+func CreateBanner(b common.AddBanner) error {
+	var banner = Banner{ImgSrc: b.ImgSrc, Link: b.Link, SortOrder: b.SortOrder}
 	err := DB.Create(&banner).Error
 	return err
 }
@@ -31,10 +34,10 @@ func DeleteBanner(id uint) (err error) {
 // -------------------------------更改-------------------------------
 
 // UpdateBanner 更新Banner
-func UpdateBanner(id uint, imgSrc string, link string, sortOrder int) (err error) {
+func UpdateBanner(b common.ModifyBanner) (err error) {
 	var banner Banner
-	banner.ID = id
-	err = DB.Model(&banner).Updates(Banner{ImgSrc: imgSrc, Link: link, SortOrder: sortOrder}).Error
+	banner.ID = b.ID
+	err = DB.Model(&banner).Updates(Banner{ImgSrc: b.ImgSrc, Link: b.Link, SortOrder: b.SortOrder}).Error
 	return err
 }
 
@@ -49,7 +52,7 @@ func QueryBannerByID(id uint) (banner Banner, err error) {
 // -------------------------------查询所有-------------------------------
 
 // QueryBanners 所有Banner
-func QueryBanners(size, offset uint) (banners []Banner, err error) {
-	err = DB.Limit(size).Offset(offset).Find(&banners).Error
+func QueryBanners() (banners []Banner, err error) {
+	err = DB.Find(&banners).Error
 	return banners, err
 }

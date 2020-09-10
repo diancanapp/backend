@@ -34,3 +34,9 @@ const (
 	ImgBanner = 1 // Banner图片
 	ImgGoods  = 2 // 商品图片
 )
+
+// 用户角色
+const (
+	User  = "user"  // 普通用户
+	Admin = "admin" // 管理员
+)

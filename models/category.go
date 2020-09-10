@@ -1,6 +1,9 @@
 package models
 
-import "github.com/jinzhu/gorm"
+import (
+	"github.com/jinzhu/gorm"
+	"wozaizhao.com/diancan/common"
+)
 
 // Category 商品分类
 type Category struct {
@@ -17,15 +20,35 @@ type Category struct {
 // -------------------------------新建-------------------------------
 
 // CreateCategory 创建商品分类
-func CreateCategory(name, categoryDesc string, sortOrder uint, categoryImg string, isShow, isHot bool) error {
-	var cate = Category{Name: name, CategoryDesc: categoryDesc, SortOrder: sortOrder, CategoryImg: categoryImg, IsShow: isShow, IsHot: isHot}
+func CreateCategory(c common.AddCategory) error {
+	var cate = Category{Name: c.Name, CategoryDesc: c.CategoryDesc, SortOrder: c.SortOrder, CategoryImg: c.CategoryImg, IsShow: c.IsShow, IsHot: c.IsHot}
 	err := DB.Create(&cate).Error
+	if err != nil {
+		common.Log("CreateCategory Error", err)
+	} else {
+		common.Log("CreateCategory Success", err)
+	}
 	return err
 }
 
 // -------------------------------删除-------------------------------
 
+// DeleteCategory 删除Category
+func DeleteCategory(id uint) (err error) {
+	var category Category
+	err = DB.Where("id = ?", id).Delete(&category).Error
+	return err
+}
+
 // -------------------------------更改-------------------------------
+
+// UpdateCategory 更新Category
+func UpdateCategory(c common.ModifyCategory) (err error) {
+	var category Category
+	category.ID = c.ID
+	err = DB.Model(&category).Updates(Category{Name: c.Name, CategoryDesc: c.CategoryDesc, SortOrder: c.SortOrder, CategoryImg: c.CategoryImg, IsShow: c.IsShow, IsHot: c.IsHot}).Error
+	return err
+}
 
 // -------------------------------查询单个-------------------------------
 
@@ -38,7 +61,7 @@ func QueryCategoryByID(id uint) (category Category, err error) {
 // -------------------------------查询所有-------------------------------
 
 // QueryCategorys 所有Category
-func QueryCategorys(size, offset uint) (categories []Category, err error) {
-	err = DB.Limit(size).Offset(offset).Find(&categories).Error
+func QueryCategorys() (categories []Category, err error) {
+	err = DB.Find(&categories).Error
 	return categories, err
 }

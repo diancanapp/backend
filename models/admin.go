@@ -10,7 +10,9 @@ import (
 type Admin struct {
 	gorm.Model
 	UserName string `json:"username" gorm:"type:varchar(255);NOT NULL;DEFAULT ''"`
+	Name     string `json:"name" gorm:"type:varchar(255);NOT NULL;DEFAULT ''"`
 	Password string `json:"password" gorm:"type:varchar(255);DEFAULT ''"`
+	Avatar   string `json:"avatar" gorm:"type:varchar(255);DEFAULT ''"`
 	Role     uint   `json:"role" gorm:"type:tinyint(1);DEFAULT '0'"`
 }
 

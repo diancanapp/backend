@@ -23,5 +23,5 @@ func FailUnauthorized(c *gin.Context, data interface{}) {
 
 // Ok 成功返回
 func Ok(c *gin.Context, data interface{}) {
-	c.JSON(http.StatusOK, gin.H{"success": false, "data": data})
+	c.JSON(http.StatusOK, gin.H{"success": true, "data": data})
 }

@@ -5,6 +5,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"wozaizhao.com/diancan/controllers/base"
+	"wozaizhao.com/diancan/controllers/qiniu"
 	"wozaizhao.com/diancan/models"
 )
 
@@ -31,6 +32,11 @@ func GetMyBonus(c *gin.Context) {
 		base.Fail(c, "Bonus not found")
 	}
 	base.Ok(c, bonus)
+}
+
+// UploadByWeapp
+func UploadByWeapp(c *gin.Context) {
+	qiniu.Upload(c)
 }
 
 // MakeOrder

@@ -123,27 +123,20 @@ func Login(c *gin.Context) {
 
 }
 
-// getCurrentAdmin 获取当前后台用户
+// GetCurrentAdmin 获取当前后台用户
 func GetCurrentAdmin(c *gin.Context) {
-	token := c.Request.Header.Get("token")
+	username := c.MustGet("username").(string)
 
-	if token == "" {
-		base.FailUnauthorized(c, "Token is missing!")
-	}
-	data, err := middleware.ParseToken(token)
-
-	if err != nil {
-		base.FailUnauthorized(c, "Token is invalid!")
-		return
-	}
-
-	admin, errGetAdmin := models.GetAdminByUserName(data.Username)
+	admin, errGetAdmin := models.GetAdminByUserName(username)
 
 	if errGetAdmin != nil {
 		base.FailUnauthorized(c, "get admin error")
 		return
 	}
 
-	base.Ok(c, admin)
+	base.Ok(c, map[string]string{
+		"avatar": admin.Avatar,
+		"name":   admin.Name,
+	})
 
 }
